@@ -1,0 +1,76 @@
+body{
+    color : #000;
+    margin : 0px;
+    padding-top : 12px;
+    background : #ffc000;
+    border-top : 4px solid #ffd941;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    font-weight: 300;
+}
+
+h1{
+    text-transform : uppercase;
+    font-weight:bold;
+    font-size : 14px;
+    letter-spacing : 1px;
+    background : #ffd941;
+    color : #000;
+    padding : 5px 10px;
+}
+
+td,th{
+    padding: 0px 15px;
+    text-align: left;
+    border-bottom: 1px solid #E1E1E1;
+}
+
+input[type="submit"]#submit{
+    background : #dd0000;
+    border : 2px solid #cc0000;
+    color : #fff;
+    font-size : 14px;
+    height : 44px;
+}
+
+#input_block,#result_block{
+    background : #000;
+    padding : 15px;
+    color : #fff;
+}
+
+
+select,input[type="text"]{
+    padding : 4px;
+    height : 30px;
+}
+
+h3{
+    text-transform : uppercase;
+    letter-spacing : 2px;
+    color : #ffd941;
+    font-size : 14px;
+}
+
+.tab{
+    background : #eee;
+}
+
+#result_table th,#result_table td{
+    border-bottom : 1px solid #666;
+}
+
+#result_table th{
+    color : #999;
+}
+
+.safety_green{
+    background : green;
+}
+
+.safety_red{
+    background : red;
+}
