@@ -1,9 +1,331 @@
-<!doctype html>
-<html>
-    <head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Crane Load Analyzer</title>
+    <meta name="description" content="Crane Load Analyzer">
+    <meta name="author" content="Insan Al-Amin">
 
-    </head>
-    <body>
-        hehehe
-    </body>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="/css/skeleton.min.css">
+    <link rel="stylesheet" href="/css/tabs.css">
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/tabs.js"></script>
+    <script src="/js/highcharts/highcharts.js"></script>
+    <script src="/js/highcharts/modules/exporting.js"></script>
+    <script src="/js/highcharts/modules/offline-exporting.js"></script>
+    <script src="/js/highcharts/themes/dark-unica.js"></script>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <h1 class="twelve columns">Simulasi Tegangan Pada Crane Akibat Pembebanan</h1>
+    </div>
+    <div class="row">
+        <div id="input_block" class="four columns">
+            <h3>Input Simulasi</h3>
+            <form id="input_form">
+                <select id="simulation_id" name="simulation_id" class="u-full-width">
+                    <option value="@">-- Pilih Jenis Simulasi --</option>
+                    <option value="1">Beam 2 Penyangga</option>
+                    <option value="2">Beam Jepit</option>
+                    <option value="3">Beam Dengan Tali Baja</option>
+                </select>
+                <div id="simulation_image">
+
+                </div>
+                <select id="material_id" name="material_id" class="u-full-width">
+                    <option value="@">-- Pilih Material --</option>
+                    {{#materials}}
+                    <option value="{{id}}">{{name}}</option>
+                    {{/materials}}
+                </select>
+                <select id="cross_section_id" name="cross_section_id" class="u-full-width">
+                    <option value="@">-- Pilih Penampang --</option>
+                    {{#crossSections}}
+                    <option value="{{id}}">{{size}} - {{mass_per_metre}} kg/m</option>
+                    {{/crossSections}}
+                </select>
+
+                <div class="row">
+                    <div class="eight columns">L : Panjang Beam (m)</div>
+                    <div class="four columns"><input class="u-full-width" name="beam_length" id="beam_length" type="text"></div>
+                </div>
+                <div class="row">
+                    <div class="eight columns">x : Lokasi Beban (m)</div>
+                    <div class="four columns"><input class="u-full-width" name="force_position" id="force_position" type="text"></div>
+                </div>
+                <div class="row">
+                    <div class="eight columns">m : Massa Beban (kg)</div>
+                    <div class="four columns"><input class="u-full-width" name="mass" id="mass" type="text"></div>
+                </div>
+                <div class="row simulation_3_input">
+                    <div class="eight columns">tx : Panjang Tali x (m)</div>
+                    <div class="four columns"><input class="u-full-width" name="l_tx" id="l_tx" type="text"></div>
+                </div>
+                <div class="row simulation_3_input">
+                    <div class="eight columns">ty : Panjang Tali y (m)</div>
+                    <div class="four columns"><input class="u-full-width" name="l_ty" id="l_ty" type="text"></div>
+                </div>
+
+
+                <input id="submit" class="twelve columns button" value="Mulai Simulasi" type="submit">
+
+            </form>
+
+
+
+        </div>
+        <div class="eight columns">
+            <div id="result_block" >
+                <h3>Hasil Simulasi</h3>
+                <table id="result_table" class="twelve columns">
+                    <thead>
+                    <tr>
+                        <th>Kondisi</th>
+                        <th>Faktor Keamanan</th>
+                        <th>&sigma;<sub>Principal</sub> Maks.</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>Massa Jenis Dihitung</td>
+                        <td id="result1_safety_factor"></td>
+                        <td id="result1_max_principal_stress"></td>
+                    </tr>
+                    <tr>
+                        <td>Massa Jenis Diabaikan</td>
+                        <td id="result2_safety_factor"></td>
+                        <td id="result2_max_principal_stress"></td>
+                    </tr>
+                    </tbody>
+
+                </table>
+                <!-- Standard <ul> with class of "tabs" -->
+                <ul class="tabs">
+                    <!-- Give href an ID value of corresponding "tabs-content" <li>'s -->
+
+                    <li><a class="active" href="#tab1">F<sub>Vertikal</sub></a></li>
+                    <li><a href="#tab2">F<sub>Horizontal</sub></a></li>
+                    <li><a href="#tab3">M<sub>Bending</sub></a></li>
+                    <li><a href="#tab4">&sigma;<sub>Normal</sub></a></li>
+                    <li><a href="#tab5">&sigma;<sub>Bending</sub></a></li>
+                    <li><a href="#tab6">&tau;</a></li>
+                    <li><a href="#tab7">&sigma;<sub>Principal c = y</sub></a></li>
+                    <li><a href="#tab8">&sigma;<sub>Principal c = 0</sub></a></li>
+                </ul>
+
+                <!-- Standard <ul> with class of "tabs-content" -->
+                <div class="row tabs-content">
+                    <!-- Give ID that matches HREF of above anchors -->
+                    <div class="tab active" id="tab1"></div>
+                    <div class="tab" id="tab2"></div>
+                    <div class="tab" id="tab3"></div>
+                    <div class="tab" id="tab4"></div>
+                    <div class="tab" id="tab5"></div>
+                    <div class="tab" id="tab6"></div>
+                    <div class="tab" id="tab7"></div>
+                    <div class="tab" id="tab8"></div>
+                </div>
+            </div>
+            <div id="loading">
+                Proses Perhitungan..
+            </div>
+
+        </div>
+    </div>
+
+</div>
+<script>
+            $(function(){
+                $("#hasil_simulasi").hide();
+                $("#loading").hide();
+                $(".simulation_3_input").hide();
+                if($('#simulation_id').val()!='@'){
+                    $("#simulation_image").html("<img width='100%' src='/img/sim"+$('#simulation_id').val()+".png' />");
+                    if($(this).val()==3){
+                        $(".simulation_3_input").show();
+                    }
+                }
+                $('#simulation_id').on('change', function() {
+                    $("#simulation_image").html("");
+                    if($(this).val()!='@'){
+                        $("#simulation_image").html("<img width='100%' src='/img/sim"+this.value+".png' />");
+                        $(".simulation_3_input").hide();
+                        if($(this).val()==3){
+                            $(".simulation_3_input").show();
+                        }
+                    }
+                })
+                $("#submit").on("click",function(e){
+                    $("#loading").show();
+                    var url = "/getresult";
+                    e.preventDefault();
+                    try{
+                        if(
+                            $("#simulation_id").val()!="@"
+                            && $("#material_id").val()!="@"
+                            && $("#cross_section_id").val()!="@"
+                            && $("#beam_length").val()!=""
+                            && $("#force_position").val()!=""
+                            && $("#mass").val()!=""
+                        ){
+                            if( $("#simulation_id").val()==3
+                                && ( $("#l_tx").val()==""
+                                    || $("#l_tx").val()==null
+                                    || $("#l_ty").val()==""
+                                    || $("#l_ty").val()==null
+                                )
+                            ) throw "Tx atau Ty belum diisi";
+                        }else{
+                            throw "Input Tidak Lengkap";
+                        }
+                        if( parseFloat($("#force_position").val()) > parseFloat($("#beam_length").val()) )
+                            throw "Lokasi Beban tidak boleh melebihi Panjang Beam";
+                        var dataToBeSent = $("#input_form").serialize();
+                        var url = "/getresult";
+                        console.log(dataToBeSent);
+                        $.post(url, dataToBeSent, function(data, textStatus) {
+                            console.log(data);
+                            $("#result1_safety_factor").html(data.result1.safetyFactor);
+                            $("#result2_safety_factor").html(data.result2.safetyFactor);
+                            var result1MaxPrincipalStress = parseFloat(data.result1.maxPrincipalStressCMaxValue).toFixed(0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")+" Pa";
+                            var result2MaxPrincipalStress = parseFloat(data.result2.maxPrincipalStressCMaxValue).toFixed(0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")+" Pa";
+                            $("#result1_max_principal_stress").html(result1MaxPrincipalStress);
+                            $("#result2_max_principal_stress").html(result2MaxPrincipalStress);
+                            $("#result1_safety_factor").removeClass();
+                            if(parseFloat(data.result1.safetyFactor)>parseFloat(2)){
+                                $("#result1_safety_factor").addClass("safety_green");
+                            }else{
+                                $("#result1_safety_factor").addClass("safety_red");
+                            }
+                            $("#result2_safety_factor").removeClass();
+                            if(parseFloat(data.result2.safetyFactor)>parseFloat(2)){
+                                $("#result2_safety_factor").addClass("safety_green");
+                            }else{
+                                $("#result2_safety_factor").addClass("safety_red");
+                            }
+                            var charts = [
+                                {
+                                    'param' : "innerVerticalForceNodes", 'container' : "tab1", 'title' : "Gaya Dalam Vertikal",
+                                    'subtitle' : "Satuan : Newton (N)",'yAxisText' : "Newton (N)"
+                                },
+                                {
+                                    'param' : "innerHorizontalForceNodes", 'container' : "tab2", 'title' : "Gaya Dalam Horizonal",
+                                    'subtitle' : "Satuan : Newton (N)",'yAxisText' : "Newton (N)"
+                                },
+                                {
+                                    'param' : "innerBendingMomentNodes", 'container' : "tab3", 'title' : "Momen Lentur Dalam",
+                                    'subtitle' : "Satuan : Newton Meter (Nm)",'yAxisText' : "Newton Meter (Nm)"
+                                },
+                                {
+                                    'param' : "normalStressNodes", 'container' : "tab4", 'title' : "Tegangan Normal Arah Sumbu x",
+                                    'subtitle' : "Satuan : Pascal (Pa)",'yAxisText' : "Pascal (Pa)"
+                                },
+                                {
+                                    'param' : "normalBendingStressNodes", 'container' : "tab5", 'title' : "Tegangan Normal Lentur Arah Sumbu x",
+                                    'subtitle' : "Satuan : Pascal (Pa)",'yAxisText' : "Pascal (Pa)"
+                                },
+                                {
+                                    'param' : "shearStressNodes", 'container' : "tab6", 'title' : "Tegangan Geser",
+                                    'subtitle' : "Satuan : Pascal (Pa)",'yAxisText' : "Pascal (Pa)"
+                                },
+                                {
+                                    'param' : "maxPrincipalStressCMaxNodes", 'container' : "tab7", 'title' : "Tegangan Principal c = y",
+                                    'subtitle' : "Satuan : Pascal (Pa)",'yAxisText' : "Pascal (Pa)"
+                                },
+                                {
+                                    'param' : "maxPrincipalStressCZeroNodes", 'container' : "tab8", 'title' : "Tegangan Principal c = 0",
+                                    'subtitle' : "Satuan : Pascal (Pa)",'yAxisText' : "Pascal (Pa)"
+                                }
+                            ];
+                            $.each(charts,function(index,value){
+                                //console.log(data["result1"][value.param]);
+                                var cx = {};
+                                cx.series1Data = [];
+                                cx.series2Data = [];
+                                $.each(data["result1"][value.param],function(index,value){
+                                    cx.series1Data.push([index,value]);
+                                });
+                                $.each(data["result2"][value.param],function(index,value){
+                                    cx.series2Data.push([index,value]);
+                                });
+                                cx.htmlId = value.container;
+                                cx.title = value.title;
+                                cx.subtitle = value.subtitle;
+                                cx.yAxisText = value.yAxisText;
+                                //console.log(cx.series2Data[2][0]);
+                                makeHighChart(cx);
+                            });
+                            $("#loading").hide();
+                            $("#hasil_simulasi").show();
+                        }, "json");
+                    }catch(err){
+                        alert(err);
+                    }finally{
+                    }
+                });
+                function makeHighChart(c){
+                    Highcharts.setOptions(Highcharts.theme);
+                    Highcharts.chart(c.htmlId, {
+                        chart: {
+                            width: 600
+                        },
+                        title: {
+                            text: c.title,
+                            x: -20 //center
+                        },
+                        subtitle: {
+                            text: c.subtitle,
+                            x: -20
+                        },
+                        yAxis: {
+                            title: {
+                                text: c.yAxisText
+                            },
+                            plotLines: [{
+                                value: 0,
+                                width: 1,
+                                color: '#808080'
+                            }]
+                        },
+                        xAxis: {
+                            title: {
+                                text: 'Meter (m)'
+                            },
+                            tickInterval: 1,
+                            labels: {
+                                enabled: true,
+                                formatter: function() {
+                                    var f;
+                                    try {
+                                        var f = c.series1Data[this.value][0];
+                                        //console.log(f);
+                                    }
+                                    catch(err) {
+                                        console.log(err);
+                                    }
+                                    return parseFloat(f).toFixed(2);
+                                }
+                            },
+                            tickPixelInterval: 100
+                        },
+                        tooltip: {
+                            valueSuffix: 'Pa'
+                        },
+                        series: [{
+                            name: 'Massa Jenis Dihitung',
+                            data: c.series1Data
+                        }, {
+                            name: 'Massa Jenis Diabaikan',
+                            data: c.series2Data
+                        }]
+                    });
+                }
+            });
+        </script>
+</body>
 </html>
