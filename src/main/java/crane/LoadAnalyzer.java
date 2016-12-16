@@ -31,14 +31,14 @@ public class LoadAnalyzer{
                 case 1:
                     System.out.println(">> case 1 :");
 
-                    try{
+
                     beam1 = new Beam2Penyangga(mInput);
                     mResult1 = beam1.getResultObject();
 
                     mInput.setMassPerLength("0");
                     beam2 = new Beam2Penyangga(mInput);
                     mResult2 = beam2.getResultObject();
-                    }catch(Exception e){e.printStackTrace();}
+
                 break;
 
                 case 2:

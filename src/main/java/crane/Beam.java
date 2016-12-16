@@ -126,7 +126,7 @@ public class Beam implements BeamInterface {
             force = mForce;
         }
 
-        System.out.println("x = "+x+" , force_position = "+mInput.getForcePosition()+" ,F = "+force);
+        //System.out.println("x = "+x+" , force_position = "+mInput.getForcePosition()+" ,F = "+force);
 
         return force;
     }
@@ -249,7 +249,9 @@ public class Beam implements BeamInterface {
                 mNormalStressNodes.put(n, mInnerHorizontalForceNodes.get(n));
 
                 mNormalStressNodesO.put( n, mNormalStressNodes.get(n).setScale(3,RoundingMode.HALF_EVEN) );
+                System.out.println("setNormalStressNodes() : Success : n = " + n);
             }catch(Exception e){
+                System.out.println("setNormalStressNodes() : Failed : n = " + n + " : "+mInnerHorizontalForceNodes.get(n));
                 System.out.println(e);
             }
 

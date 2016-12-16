@@ -11,39 +11,50 @@ public class BeamTaliBaja extends Beam{
     public BeamTaliBaja(Input input) {
 
         super(input);
+        System.out.println("> BeamTaliBaja initiated");
+        try {
+            // Hitung Gaya sumbu y Di Posisi Tali Baja
+            setTy();
+
+            // Hitung Gaya sumbu x Di Posisi Tali Baja
+            setTx();
+
+            // Hitung Gaya sumbu y di Ax
+            setAx();
+
+            // Hitung Gaya sumbu y di Ay
+            setAy();
+
+            // Hitung Gaya sumbu x di By
+            setBy();
+
+            System.out.println(">> Set Ty - By : Success : "+mTy+" , "+mTx+" , "+mAx+" , "+mAy+" , "+mBy);
+        }catch (Exception e){
+            System.out.print(">> Set Ty - By : Failed");
+            e.printStackTrace();
+        }
 
 
-        // Hitung Gaya sumbu y Di Posisi Tali Baja
-        setTy();
 
-        // Hitung Gaya sumbu x Di Posisi Tali Baja
-        setTx();
-
-        // Hitung Gaya sumbu y di Ax
-        setAx();
-
-        // Hitung Gaya sumbu y di Ay
-        setAy();
-
-        // Hitung Gaya sumbu x di By
-        setBy();
+            setInnerVerticalForceNodes();
+            setInnerHorizontalForceNodes();
+            setInnerBendingMomentNodes();
 
 
 
-
-
-
-        setInnerVerticalForceNodes();
-        setInnerHorizontalForceNodes();
-        setInnerBendingMomentNodes();
-
+        try{
         setNormalStressNodes();
         setNormalBendingStressNodes();
         setShearStressNodes();
 
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
         setMaxPrincipalStressCMaxNodes();
         setMaxPrincipalStressCZeroNodes();
         setSafetyFactor();
+
     }
 
     private void setTy() {
@@ -110,14 +121,14 @@ public class BeamTaliBaja extends Beam{
         /**
          * Menghitung Gaya Geser Dalam di Tiap Lokasi Node
          */
+        try {
+            // Inisiasi Class mInnerVerticalForceNodes
+            mInnerVerticalForceNodes = new TreeMap<>();
 
-        // Inisiasi Class mInnerVerticalForceNodes
-        mInnerVerticalForceNodes = new TreeMap<>();
+            for (BigDecimal n : mXNodes) {
 
-        for(BigDecimal n : mXNodes){
+                // V(n) = Ay - R(n) - ty(n) - F(n)
 
-            // V(n) = Ay - R(n) - ty(n) - F(n)
-            try {
                 mInnerVerticalForceNodes.put(n, mAy
                         .subtract(mCrossSection.mass_per_metre
                                 .multiply(n)
@@ -126,10 +137,14 @@ public class BeamTaliBaja extends Beam{
                         .subtract(getTyOnX(n))
                         .subtract(getForceOnX(n)).setScale(12, RoundingMode.HALF_EVEN)
                 );
-            }catch(Exception e){
-                e.printStackTrace();
-            }
 
+
+            }
+            System.out.println(">> setInnerVerticalForceNodes() : Success");
+
+        }catch(Exception e){
+            System.out.print(">> setInnerVerticalForceNodes() : Failed");
+            e.printStackTrace();
         }
 
     }
@@ -138,60 +153,69 @@ public class BeamTaliBaja extends Beam{
         /**
          * Menghitung Gaya Normal Dalam di Tiap Lokasi Node
          */
+        try{
+            // Inisiasi Class mInnerVerticalForceNodes
+            mInnerHorizontalForceNodes = new TreeMap<>();
 
-        // Inisiasi Class mInnerVerticalForceNodes
-        mInnerHorizontalForceNodes = new TreeMap<>();
+            for(BigDecimal n : mXNodes){
 
-        for(BigDecimal n : mXNodes){
+                // N(n) = tx(i) - Ax
 
-            // N(n) = tx(i) - Ax
-            try {
-                mInnerVerticalForceNodes.put(n,
-                        getTxOnX(n).subtract(mAx).setScale(12, RoundingMode.HALF_EVEN)
-                );
-            }catch(Exception e){
-                e.printStackTrace();
+                    mInnerHorizontalForceNodes.put(n,
+                            getTxOnX(n).subtract(mAx).setScale(12, RoundingMode.HALF_EVEN)
+                    );
+
+
             }
-
+            System.out.print(">> setInnerHorizontalForceNodes() : Success");
+        }catch(Exception e){
+            System.out.print(">> setInnerHorizontalForceNodes() : Failed");
+            e.printStackTrace();
         }
+
     }
 
     private void setInnerBendingMomentNodes() {
         /**
          * Menghitung Momen Lentur Dalam di Tiap Lokasi Node
          */
+        try{
+            // Referensi Class mInnerBendingMomentNodes
+            mInnerBendingMomentNodes = new TreeMap<>();
+            mInnerBendingMomentNodesO = new TreeMap<>();
 
-        // Referensi Class mInnerBendingMomentNodes
-        mInnerBendingMomentNodes = new TreeMap<>();
-        mInnerBendingMomentNodesO = new TreeMap<>();
+            for(BigDecimal n : mXNodes){
 
-        for(BigDecimal n : mXNodes){
+                //
+                try {
+                    mInnerBendingMomentNodes.put(n, mAy
+                            .multiply(n)
+                            .subtract(
+                                    new BigDecimal(0.5)
+                                            .multiply(mCrossSection.mass_per_metre)
+                                            .multiply(mGravity)
+                                            .multiply(n)
+                                            .multiply(n)
+                            ).subtract(
+                                    getForceOnX(n).multiply( n.subtract(mInput.getForcePosition()) )
+                            ).subtract(
+                                    getTxOnX(n)
+                                    .multiply(
+                                            n.subtract(mInput.getLTy())
+                                    )
+                            ).setScale(12, RoundingMode.HALF_EVEN)
+                    );
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
 
-            //
-            try {
-                mInnerBendingMomentNodes.put(n, mAy
-                        .multiply(n)
-                        .subtract(
-                                new BigDecimal(0.5)
-                                        .multiply(mCrossSection.mass_per_metre)
-                                        .multiply(mGravity)
-                                        .multiply(n)
-                                        .multiply(n)
-                        ).subtract(
-                                getForceOnX(n).multiply( n.subtract(mInput.getForcePosition()) )
-                        ).subtract(
-                                getTxOnX(n)
-                                .multiply(
-                                        n.subtract(mInput.getLTy())
-                                )
-                        ).setScale(12, RoundingMode.HALF_EVEN)
-                );
-            }catch(Exception e){
-                e.printStackTrace();
+                mInnerBendingMomentNodesO.put( n, mInnerBendingMomentNodes.get(n).setScale(3,RoundingMode.HALF_EVEN) );
+
             }
-
-            mInnerBendingMomentNodesO.put( n, mInnerBendingMomentNodes.get(n).setScale(3,RoundingMode.HALF_EVEN) );
-
+            System.out.print(">> setInnerBendingMomentNodes() : Success");
+        }catch(Exception e){
+            System.out.print(">> setInnerBendingMomentNodes() : Failed");
+            e.printStackTrace();
         }
     }
 
