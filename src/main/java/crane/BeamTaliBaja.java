@@ -25,10 +25,7 @@ public class BeamTaliBaja extends Beam{
             // Hitung Gaya sumbu y di Ay
             setAy();
 
-            // Hitung Gaya sumbu x di By
-            setBy();
 
-            System.out.println(">> Set Ty - By : Success : "+mTy+" , "+mTx+" , "+mAx+" , "+mAy+" , "+mBy);
         }catch (Exception e){
             System.out.print(">> Set Ty - By : Failed");
             e.printStackTrace();
@@ -59,17 +56,20 @@ public class BeamTaliBaja extends Beam{
 
     private void setTy() {
         // ty = -(( R*(0.5 L) + F*x ))/L_ty
-
+        System.out.print(">> setTy() : R = " + mR + " , beam_length = "+mInput.getBeamLength() + " , l_tx = " + mInput.getLTx() + " , force = " + mForce + " , force_position = "+mInput.getForcePosition());
 
         mTy = new BigDecimal(-1)
                 .multiply(
                     mR
                     .multiply(new BigDecimal(0.5))
                     .multiply(mInput.getBeamLength())
-                ).add(
-                    mForce
-                    .multiply(mInput.getForcePosition())
-                ).divide(mInput.getLTy(),12,RoundingMode.HALF_EVEN);
+                            .add(
+                                    mForce
+                                    .multiply(mInput.getForcePosition())
+                            )
+                ).divide(mInput.getLTx(),12,RoundingMode.HALF_EVEN);
+
+        System.out.println(" , ty = "+mTy);
     }
 
     private BigDecimal getTyOnX(BigDecimal x){
@@ -88,6 +88,7 @@ public class BeamTaliBaja extends Beam{
         mTx = mInput.getLTx()
             .divide(mInput.getLTy())
             .multiply(mTy);
+        System.out.print(">> setTx() : tx = "+mTx);
     }
 
     private BigDecimal getTxOnX(BigDecimal x){
