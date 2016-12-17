@@ -44,9 +44,7 @@ public class Beam2Penyangga extends Beam {
         try {
             mBy = new BigDecimal(0.5)
                     .multiply(
-                            mCrossSection.mass_per_metre
-                                    .multiply(mInput.getBeamLength())
-                                    .multiply(mGravity)
+                            mR
                     )
                     .add(
                             mInput.getMass()

@@ -131,12 +131,9 @@ public class BeamTaliBaja extends Beam{
                 // V(n) = Ay - R(n) - ty(n) - F(n)
 
                 mInnerVerticalForceNodes.put(n, mAy
-                        .subtract(mCrossSection.mass_per_metre
-                                .multiply(n)
-                                .multiply(mGravity)
-                        )
-                        .subtract(getTyOnX(n))
-                        .subtract(getForceOnX(n)).setScale(12, RoundingMode.HALF_EVEN)
+                    .subtract(getROnX(n))
+                    .subtract(getTyOnX(n))
+                    .subtract(getForceOnX(n)).setScale(12, RoundingMode.HALF_EVEN)
                 );
 
 
@@ -186,23 +183,21 @@ public class BeamTaliBaja extends Beam{
             mInnerBendingMomentNodesO = new TreeMap<>();
 
             for(BigDecimal n : mXNodes){
-
+                System.out.println("oleleho , n = "+n+" , R(i) = "+getROnX(n)+" , F(i) = "+getForceOnX(n)+" , s ="+mInput.getForcePosition());
                 //
                 try {
                     mInnerBendingMomentNodes.put(n, mAy
                             .multiply(n)
                             .subtract(
                                     new BigDecimal(0.5)
-                                            .multiply(mCrossSection.mass_per_metre)
-                                            .multiply(mGravity)
-                                            .multiply(n)
+                                            .multiply(getROnX(n))
                                             .multiply(n)
                             ).subtract(
                                     getForceOnX(n).multiply( n.subtract(mInput.getForcePosition()) )
                             ).subtract(
-                                    getTxOnX(n)
+                                    getTyOnX(n)
                                     .multiply(
-                                            n.subtract(mInput.getLTy())
+                                            n.subtract(mInput.getLTx())
                                     )
                             ).setScale(12, RoundingMode.HALF_EVEN)
                     );

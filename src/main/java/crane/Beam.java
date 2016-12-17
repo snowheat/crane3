@@ -94,6 +94,14 @@ public class Beam implements BeamInterface {
             .multiply(mGravity);
     }
 
+    protected BigDecimal getROnX(BigDecimal x) {
+
+        BigDecimal r = mCrossSection.getMass_per_metre()
+                .multiply(x)
+                .multiply(mGravity);
+        return r;
+    }
+
     protected void setMaterial(){
         String sql = "SELECT * FROM material WHERE id = :id";
 
@@ -220,6 +228,15 @@ public class Beam implements BeamInterface {
         // Memasukan 0.999 * panjang beam ke TreeSet xnodes
         mXNodes.add( mInput.getBeamLength().multiply(new BigDecimal(1000)).subtract(new BigDecimal(1)).divide(new BigDecimal(1000)) );
 
+        if(mInput.getSimulationID()==3){
+            // Memasukan Ltx ke TreeSet xnodes
+            mXNodes.add(mInput.getLTx().setScale(3,RoundingMode.HALF_EVEN));
+
+            // Memasukan 0.999 * Ltx ke TreeSet xnodes
+            mXNodes.add( mInput.getLTx().multiply(new BigDecimal(1000)).subtract(new BigDecimal(1)).divide(new BigDecimal(1000)) );
+        }
+
+
         // Menguji titik-titik pengujian yang telah dibuat
         for(BigDecimal xnode: mXNodes){
             // System.out.println(xnode);
@@ -242,11 +259,11 @@ public class Beam implements BeamInterface {
             try {
 
                 // Normal Stress
-                // N / A
-                // mInnerHorizontalForceNodes[n] / ( secondMomentOfAreaX )
+                // N(i) / A
+                // mInnerHorizontalForceNodes[n] / ( crossSectionArea ) * 10000
                 // (N)/(cm^2)
 
-                mNormalStressNodes.put(n, mInnerHorizontalForceNodes.get(n));
+                mNormalStressNodes.put(n, mInnerHorizontalForceNodes.get(n).divide(mCrossSection.getArea_of_section(CrossSection.Unit.DEFAULT),12,RoundingMode.HALF_EVEN).multiply(new BigDecimal(10000)));
 
                 mNormalStressNodesO.put( n, mNormalStressNodes.get(n).setScale(3,RoundingMode.HALF_EVEN) );
                 System.out.println("setNormalStressNodes() : Success : n = " + n);
@@ -285,7 +302,7 @@ public class Beam implements BeamInterface {
                         mCrossSection.sec_moment_area_x, 12, RoundingMode.HALF_EVEN
 
                     // Konversi (Nm.mm)/(cm^4) ke (N/m^2)
-                    ).multiply(new BigDecimal(100000)).abs()
+                    ).multiply(new BigDecimal(100000))
                 );
 
                 mNormalBendingStressNodesO.put( n, mNormalBendingStressNodes.get(n).setScale(3,RoundingMode.HALF_EVEN) );
@@ -370,7 +387,7 @@ public class Beam implements BeamInterface {
 
                     // Total Tegangan Normal Sumbu x
                     mNormalStressNodes.get(n)
-                    .add( mNormalBendingStressNodes.get(n))
+                    .add( mNormalBendingStressNodes.get(n)).abs()
 
                     // Total Tegangan Normal Sumbu y
                     .add( new BigDecimal(0) )
