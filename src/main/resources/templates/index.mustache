@@ -22,7 +22,7 @@
 <body>
 <div class="container">
     <div class="row">
-        <h1 class="twelve columns">Simulasi Tegangan Pada Crane Akibat Pembebanan</h1>
+        <h1 class="twelve columns">Simulasi Tegangan Pada Crane Akibat Pembebanan - UNJANI 2016</h1>
     </div>
     <div class="row">
         <div id="input_block" class="four columns">
@@ -87,7 +87,7 @@
                     <tr>
                         <th>Kondisi</th>
                         <th>Faktor Keamanan</th>
-                        <th>&sigma;<sub>Principal</sub> Maks.</th>
+                        <th>&sigma;<sub>Max All</sub></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -108,14 +108,14 @@
                 <ul class="tabs">
                     <!-- Give href an ID value of corresponding "tabs-content" <li>'s -->
 
-                    <li><a class="active" href="#tab1">F<sub>Vertikal</sub></a></li>
-                    <li><a href="#tab2">F<sub>Horizontal</sub></a></li>
-                    <li><a href="#tab3">M<sub>Bending</sub></a></li>
-                    <li><a href="#tab4">&sigma;<sub>Normal</sub></a></li>
+                    <li><a class="active" href="#tab1">F<sub>Geser</sub></a></li>
+                    <li><a href="#tab2">F<sub>Normal</sub></a></li>
+                    <li><a href="#tab3">M<sub>Lentur</sub></a></li>
+                    <li><a href="#tab4">&sigma;</a></li>
                     <li><a href="#tab5">&sigma;<sub>Bending</sub></a></li>
                     <li><a href="#tab6">&tau;</a></li>
-                    <li><a href="#tab7">&sigma;<sub>Principal c = y</sub></a></li>
-                    <li><a href="#tab8">&sigma;<sub>Principal c = 0</sub></a></li>
+                    <li><a href="#tab7">&sigma;<sub>max (c=y)</sub></a></li>
+                    <li><a href="#tab8">&sigma;<sub>max (c=0)</sub></a></li>
                 </ul>
 
                 <!-- Standard <ul> with class of "tabs-content" -->
@@ -144,9 +144,10 @@
                 $("#hasil_simulasi").hide();
                 $("#loading").hide();
                 $(".simulation_3_input").hide();
+
                 if($('#simulation_id').val()!='@'){
                     $("#simulation_image").html("<img width='100%' src='/img/sim"+$('#simulation_id').val()+".png' />");
-                    if($(this).val()==3){
+                    if($('#simulation_id').val()==3){
                         $(".simulation_3_input").show();
                     }
                 }
@@ -210,35 +211,35 @@
                             }
                             var charts = [
                                 {
-                                    'param' : "innerVerticalForceNodes", 'container' : "tab1", 'title' : "Gaya Dalam Vertikal",
+                                    'param' : "innerVerticalForceNodes", 'container' : "tab1", 'title' : "Diagram Gaya Geser",
                                     'subtitle' : "Satuan : Newton (N)",'yAxisText' : "Newton (N)"
                                 },
                                 {
-                                    'param' : "innerHorizontalForceNodes", 'container' : "tab2", 'title' : "Gaya Dalam Horizonal",
+                                    'param' : "innerHorizontalForceNodes", 'container' : "tab2", 'title' : "Diagaram Gaya Normal",
                                     'subtitle' : "Satuan : Newton (N)",'yAxisText' : "Newton (N)"
                                 },
                                 {
-                                    'param' : "innerBendingMomentNodes", 'container' : "tab3", 'title' : "Momen Lentur Dalam",
+                                    'param' : "innerBendingMomentNodes", 'container' : "tab3", 'title' : "Diagram Momen Lentur",
                                     'subtitle' : "Satuan : Newton Meter (Nm)",'yAxisText' : "Newton Meter (Nm)"
                                 },
                                 {
-                                    'param' : "normalStressNodes", 'container' : "tab4", 'title' : "Tegangan Normal Arah Sumbu x",
+                                    'param' : "normalStressNodes", 'container' : "tab4", 'title' : "Diagram Tegangan Normal",
                                     'subtitle' : "Satuan : Pascal (Pa)",'yAxisText' : "Pascal (Pa)"
                                 },
                                 {
-                                    'param' : "normalBendingStressNodes", 'container' : "tab5", 'title' : "Tegangan Normal Lentur Arah Sumbu x",
+                                    'param' : "normalBendingStressNodes", 'container' : "tab5", 'title' : "Diagram Tegangan Normal Akibat Momen Lentur",
                                     'subtitle' : "Satuan : Pascal (Pa)",'yAxisText' : "Pascal (Pa)"
                                 },
                                 {
-                                    'param' : "shearStressNodes", 'container' : "tab6", 'title' : "Tegangan Geser",
+                                    'param' : "shearStressNodes", 'container' : "tab6", 'title' : "Diagram Tegangan Geser",
                                     'subtitle' : "Satuan : Pascal (Pa)",'yAxisText' : "Pascal (Pa)"
                                 },
                                 {
-                                    'param' : "maxPrincipalStressCMaxNodes", 'container' : "tab7", 'title' : "Tegangan Principal c = y",
+                                    'param' : "maxPrincipalStressCMaxNodes", 'container' : "tab7", 'title' : "Diagram Tegangan Principal Maksimum Tarik , c = y",
                                     'subtitle' : "Satuan : Pascal (Pa)",'yAxisText' : "Pascal (Pa)"
                                 },
                                 {
-                                    'param' : "maxPrincipalStressCZeroNodes", 'container' : "tab8", 'title' : "Tegangan Principal c = 0",
+                                    'param' : "maxPrincipalStressCZeroNodes", 'container' : "tab8", 'title' : "Diagram Tegangan Principal Maksimum Tarik , c = 0",
                                     'subtitle' : "Satuan : Pascal (Pa)",'yAxisText' : "Pascal (Pa)"
                                 }
                             ];
