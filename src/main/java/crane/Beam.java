@@ -70,6 +70,8 @@ public class Beam implements BeamInterface {
         // Set Data Penampang
         setCrossSection();
 
+        System.out.println("Second Moment Inertia : "+mCrossSection.getSec_moment_area_x(CrossSection.Unit.DEFAULT));
+
         // Set Gaya Akibat Massa Beban
         setForce();
 
@@ -386,8 +388,8 @@ public class Beam implements BeamInterface {
                 .multiply(
 
                     // Total Tegangan Normal Sumbu x
-                    mNormalStressNodes.get(n)
-                    .add( mNormalBendingStressNodes.get(n)).abs()
+                    mNormalStressNodes.get(n).abs()
+                    .add( mNormalBendingStressNodes.get(n).abs() )
 
                     // Total Tegangan Normal Sumbu y
                     .add( new BigDecimal(0) )
@@ -402,8 +404,8 @@ public class Beam implements BeamInterface {
                         new BigDecimal(1)
                         .multiply(
                             // Total Tegangan Normal Sumbu x
-                            mNormalStressNodes.get(n)
-                            .add( mNormalBendingStressNodes.get(n))
+                            mNormalStressNodes.get(n).abs()
+                            .add( mNormalBendingStressNodes.get(n).abs() )
 
                             // Total Tegangan Normal Sumbu y
                             .subtract( new BigDecimal(0) )

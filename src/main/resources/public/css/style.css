@@ -78,3 +78,15 @@ h3{
 .highcharts-title tspan{
     text-transform : capitalize !important;
 }
+
+#panduan{
+    background : #000;
+    border : none;
+    color : #ffd941;
+    position : absolute;
+    top : 0px;
+    margin-top: -22px;
+    margin-left : -235px;
+    border-radius : 0;
+    padding : 4px 20px;
+}
