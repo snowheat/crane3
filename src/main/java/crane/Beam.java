@@ -206,7 +206,7 @@ public class Beam implements BeamInterface {
          */
 
         // Pembagi panjang batang
-        int divider = 200;
+        int divider = 5;
 
         // Menentukan jarak antar titik
         BigDecimal step = mInput.getBeamLength().divide(new BigDecimal(divider), 4, RoundingMode.HALF_EVEN);
@@ -314,7 +314,7 @@ public class Beam implements BeamInterface {
 
 
 
-            //System.out.println("Inner Normal Bending Stress on " + n + " : " + mInnerBendingMomentNodes.get(n) + " " + mCrossSection.depth_of_section + " " + mCrossSection.sec_moment_area_x + " = " + mNormalBendingStressNodes.get(n) + " ; " );
+            //System.out.println("Inner Normal Bending Stress on " + n + " : M : "+mInnerBendingMomentNodes.get(n)+" , y : "+mCrossSection.depth_of_section+" , I : "+mCrossSection.sec_moment_area_x+" " + mInnerBendingMomentNodes.get(n) + " " + mCrossSection.depth_of_section + " " + mCrossSection.sec_moment_area_x + " = " + mNormalBendingStressNodes.get(n) + " ; " );
 
         }
     }
