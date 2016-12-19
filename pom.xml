@@ -6,7 +6,7 @@
 
     <groupId>com.insanblog</groupId>
     <artifactId>crane2</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0-SNAPSHOT</version> 
 
     <!-- library dependencies -->
     <dependencies>
