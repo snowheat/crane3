@@ -38,7 +38,6 @@ public class BeamTaliBaja extends Beam{
             setInnerBendingMomentNodes();
 
 
-
         try{
         setNormalStressNodes();
         setNormalBendingStressNodes();

@@ -67,6 +67,8 @@ public class Beam implements BeamInterface {
         // Set Data Material
         setMaterial();
 
+        System.out.println("yield strength : "+mMaterial.getYield_strength(Material.Unit.DEFAULT));
+
         // Set Data Penampang
         setCrossSection();
 
@@ -206,7 +208,7 @@ public class Beam implements BeamInterface {
          */
 
         // Pembagi panjang batang
-        int divider = 5;
+        int divider = 200;
 
         // Menentukan jarak antar titik
         BigDecimal step = mInput.getBeamLength().divide(new BigDecimal(divider), 4, RoundingMode.HALF_EVEN);
@@ -237,7 +239,6 @@ public class Beam implements BeamInterface {
             // Memasukan 0.999 * Ltx ke TreeSet xnodes
             mXNodes.add( mInput.getLTx().multiply(new BigDecimal(1000)).subtract(new BigDecimal(1)).divide(new BigDecimal(1000)) );
         }
-
 
         // Menguji titik-titik pengujian yang telah dibuat
         for(BigDecimal xnode: mXNodes){
