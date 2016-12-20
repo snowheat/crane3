@@ -16,6 +16,8 @@ import static spark.Spark.*;
 public class Main {
     public static void main(String[] args) {
 
+        port(1111);
+
         Sql2o mSql2o = new Sql2o("jdbc:sqlite:src/crane.sqlite", null, null);
         Connection mCon = mSql2o.open();
 
