@@ -108,7 +108,7 @@
                 <!-- Standard <ul> with class of "tabs" -->
                 <ul class="tabs">
                     <!-- Give href an ID value of corresponding "tabs-content" <li>'s -->
-
+                    <li><a href="#tab0">DBB</a></li>
                     <li><a class="active" href="#tab1">F<sub>Geser</sub></a></li>
                     <li><a href="#tab2">F<sub>Normal</sub></a></li>
                     <li><a href="#tab3">M<sub>Lentur</sub></a></li>
@@ -122,6 +122,7 @@
                 <!-- Standard <ul> with class of "tabs-content" -->
                 <div class="row tabs-content">
                     <!-- Give ID that matches HREF of above anchors -->
+                    <div class="tab" id="tab0"></div>
                     <div class="tab active" id="tab1"></div>
                     <div class="tab" id="tab2"></div>
                     <div class="tab" id="tab3"></div>
@@ -189,9 +190,12 @@
                             throw "Lokasi Beban tidak boleh melebihi Panjang Beam";
                         var dataToBeSent = $("#input_form").serialize();
                         var url = "/getresult";
-                        console.log(dataToBeSent);
+                        //console.log(dataToBeSent);
                         $.post(url, dataToBeSent, function(data, textStatus) {
                             console.log(data);
+
+                            $("#tab0").html("<img src='/img/dbb"+ data.result1.input.simulationID +".png' />");
+
                             $("#result1_safety_factor").html(data.result1.safetyFactor);
                             $("#result2_safety_factor").html(data.result2.safetyFactor);
                             var result1MaxPrincipalStress = parseFloat(data.result1.maxPrincipalStressCMaxValue).toFixed(0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")+" Pa";
