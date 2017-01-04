@@ -25,6 +25,9 @@ public class Main {
 
         Gson gson                       = new Gson();
 
+        // TODO Calculate something before
+        // FIXME Bug when user input ..
+
         get("/", (rq, rs) -> {
 
             Map<String, Object> model     = new HashMap<>();
